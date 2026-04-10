@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Asset Management - ServiceTitan</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            colors: {
+              brand: {
+                green: '#13361c',    // Deep Forest Green
+                olive: '#212717',    // Dark Olive/Blackish
+                brown: '#826343',    // Earthy Brown
+                gold: '#cc9a48',     // Muted Gold
+                silver: '#dfdfdf',   // Light Grey/Silver
+                black: '#161616',    // Deep Black
+                'black-pure': '#000000',
+                // Aliases for compatibility
+                dark: '#212717',     // Same as olive
+                darker: '#161616',   // Same as black
+                light: '#dfdfdf',    // Same as silver
+              },
+              gold: {
+                50: '#F5F0E8',
+                100: '#E8D9C4',
+                200: '#D4B896',
+                300: '#cc9a48', // Primary Golden Brown/Ochre
+                400: '#cc9a48', // Brand Primary
+                500: '#826343', // Medium Brown
+                600: '#6B5237',
+                700: '#4A3826',
+                800: '#212717', // Very Dark Brown
+                900: '#181816', // Black
+                950: '#13361C', // Dark Green
+              },
+              slate: {
+                50: '#F5F5F5',
+                100: '#E8E8E8',
+                200: '#dfdfdf', // Light Gray/Silver
+                300: '#C0C0C0',
+                400: '#9E9E9E',
+                500: '#625F5D',
+                600: '#4D4B49',
+                700: '#383635',
+                800: '#212717', // Very Dark Brown
+                900: '#181816', // Black
+                950: '#13361C', // Dark Green
+              }
+            }
+          }
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
