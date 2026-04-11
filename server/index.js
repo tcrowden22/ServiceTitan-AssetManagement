@@ -9,10 +9,7 @@ const { sequelize } = require('./models');
 dotenv.config();
 
 const app = express();
-
-// 🔥 IMPORTANT: Azure requires this
 const PORT = process.env.PORT || 8080;
-
 const DIST_PATH = path.join(__dirname, '../dist');
 
 app.use(cors({
@@ -23,7 +20,6 @@ app.use(cors({
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
-// Session configuration
 app.use(session({
   secret: process.env.SESSION_SECRET || 'dev_secret',
   resave: false,
@@ -38,7 +34,6 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-// SAML setup
 if (process.env.OKTA_SAML_ENTRY_POINT) {
   const samlStrategy = require('./config/saml');
   passport.use('saml', samlStrategy);
@@ -47,7 +42,6 @@ if (process.env.OKTA_SAML_ENTRY_POINT) {
   passport.deserializeUser((user, done) => done(null, user));
 }
 
-// API Routes
 app.use('/api/auth', require('./routes/auth'));
 
 if (process.env.OKTA_SAML_ENTRY_POINT) {
@@ -56,29 +50,23 @@ if (process.env.OKTA_SAML_ENTRY_POINT) {
 
 app.use('/api/assets', require('./routes/assets'));
 
-// Serve frontend
 app.use(express.static(DIST_PATH));
 
-app.get('*', (req, res) => {
+app.use((req, res) => {
   res.sendFile(path.join(DIST_PATH, 'index.html'));
 });
 
-
-// 🔥 START SERVER IMMEDIATELY (THIS FIXES AZURE CRASH)
 app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
 
-
-// 🔥 RUN DB AFTER START (non-blocking)
 (async () => {
   try {
     await sequelize.authenticate();
-    console.log('✅ Database connected');
-
+    console.log('Database connected...');
     await sequelize.sync();
-    console.log('✅ Database synced');
+    console.log('Database synced.');
   } catch (err) {
-    console.error('❌ Database error:', err);
+    console.error('Database error:', err);
   }
 })();
