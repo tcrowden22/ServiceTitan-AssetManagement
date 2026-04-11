@@ -14,9 +14,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: List files
-        run: find . -maxdepth 3 -type f | sort
-
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
@@ -32,9 +29,21 @@ jobs:
       - name: Build frontend
         run: npm run build
 
+      - name: Prepare release folder
+        run: |
+          rm -rf release
+          mkdir -p release
+          cp package.json package-lock.json index.html vite.config.js release/
+          cp -R server release/
+          cp -R dist release/
+          cp -R src release/
+
+      - name: List release files
+        run: find release -maxdepth 4 -type f | sort
+
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v3
         with:
           app-name: stassetapp-prod
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          package: .
+          package: ./release
