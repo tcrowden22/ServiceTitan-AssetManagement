@@ -1,5 +1,4 @@
 name: Deploy Azure App Service - stassetapp-prod
-
 on:
   push:
     branches:
@@ -24,26 +23,30 @@ jobs:
         run: npm ci
 
       - name: Install server deps
-        run: npm ci --prefix server
+        run: npm ci --prefix server --omit=dev
 
       - name: Build frontend
         run: npm run build
 
       - name: Prepare release folder
         run: |
-          rm -rf release
+          rm -rf release release.zip
           mkdir -p release
           cp package.json package-lock.json index.html vite.config.js release/
           cp -R server release/
           cp -R dist release/
-          cp -R src release/
 
-      - name: List release files
+      - name: Verify release tree
         run: find release -maxdepth 4 -type f | sort
+
+      - name: Zip release
+        run: |
+          cd release
+          zip -r ../release.zip .
 
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v3
         with:
           app-name: stassetapp-prod
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          package: ./release
+          package: ./release.zip
